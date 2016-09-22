@@ -12,29 +12,32 @@ https://we.tl/jWGpUXl80L
 
 ## Pricing Rules
 
-I tried to make the pricin rules as flexible as possible.
+I tried to make the pricing rules as flexible as possible. The solution for that was implement some expressions to make this work.
 
-So I implemented some expressions to make this work.
-
-You have mostly two types:
+You have mostly two types of rules:
 
 * Deal 
 * Discount
 
-So in the rule field, for *Deals* you can type:
 
-X FOR Y
+
+So in the *rule* field, for **Deals** you can type:
+
+*X FOR Y*
 
 EX: 
-3 for 2
+*3 FOR 2*
 or 
-2 for 1
+*2 FOR 1*
 
 
-For *Discounts* you can specify:
 
-199.00
+For **Discounts** you can specify:
+
+EX:
+
+*199.00 - the value of the dicount*
 
 or
 
-199.00 WHEN_THERE 3
+*199.00 WHEN_THERE 3 - the value discounted in a specific condition*
