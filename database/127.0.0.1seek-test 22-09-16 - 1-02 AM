@@ -1,0 +1,191 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Versão 4541
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: 127.0.0.1 (MySQL 5.7.12)
+# Base de Dados: seek-test
+# Tempo de Geração: 2016-09-22 4:02:13 AM +0000
+# ************************************************************
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump da tabela ad_types
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `ad_types`;
+
+CREATE TABLE `ad_types` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `code` varchar(10) NOT NULL,
+  `name` varchar(45) NOT NULL,
+  `price` decimal(8,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `ad_types` WRITE;
+/*!40000 ALTER TABLE `ad_types` DISABLE KEYS */;
+
+INSERT INTO `ad_types` (`id`, `code`, `name`, `price`, `created_at`, `updated_at`, `deleted_at`)
+VALUES
+	(1,'classis','Classic Ad',269.99,'2016-09-22 03:56:32','2016-09-22 03:56:32',NULL),
+	(2,'standout','Standout Ad',322.99,'2016-09-22 03:56:52','2016-09-22 03:56:52',NULL),
+	(3,'premium','Premium Ad',394.99,'2016-09-22 03:57:13','2016-09-22 03:57:13',NULL);
+
+/*!40000 ALTER TABLE `ad_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump da tabela customers
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `customers`;
+
+CREATE TABLE `customers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(45) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `customers` WRITE;
+/*!40000 ALTER TABLE `customers` DISABLE KEYS */;
+
+INSERT INTO `customers` (`id`, `name`, `created_at`, `updated_at`, `deleted_at`)
+VALUES
+	(1,'Unilever','2016-09-22 03:57:32','2016-09-22 03:57:32',NULL),
+	(2,'Apple','2016-09-22 03:57:40','2016-09-22 03:57:40',NULL),
+	(3,'Nike','2016-09-22 03:57:44','2016-09-22 03:57:44',NULL),
+	(4,'Ford','2016-09-22 03:57:49','2016-09-22 03:57:49',NULL),
+	(5,'Default','2016-09-22 04:00:37','2016-09-22 04:00:37',NULL);
+
+/*!40000 ALTER TABLE `customers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump da tabela orders
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `orders`;
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `subtotal` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `total` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `discount` decimal(8,2) NOT NULL DEFAULT '0.00',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `customer_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_orders_customers1_idx` (`customer_id`),
+  CONSTRAINT `fk_orders_customers1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+
+INSERT INTO `orders` (`id`, `subtotal`, `total`, `discount`, `created_at`, `updated_at`, `deleted_at`, `customer_id`)
+VALUES
+	(1,987.97,987.97,0.00,'2016-09-22 01:00:57','2016-09-22 04:00:57',NULL,5),
+	(2,1204.96,934.97,269.99,'2016-09-22 01:01:13','2016-09-22 04:01:13',NULL,1),
+	(3,1363.96,1294.96,69.00,'2016-09-22 01:01:38','2016-09-22 04:01:38',NULL,2),
+	(4,1579.96,1519.96,60.00,'2016-09-22 01:01:56','2016-09-22 04:01:56',NULL,3);
+
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump da tabela orders_items
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `orders_items`;
+
+CREATE TABLE `orders_items` (
+  `order_id` int(11) NOT NULL,
+  `ad_type_id` int(11) NOT NULL,
+  `quantity` tinyint(3) DEFAULT NULL,
+  PRIMARY KEY (`order_id`,`ad_type_id`),
+  KEY `fk_orders_has_ad_types_ad_types1_idx` (`ad_type_id`),
+  KEY `fk_orders_has_ad_types_orders3_idx` (`order_id`),
+  CONSTRAINT `fk_orders_has_ad_types_ad_types1` FOREIGN KEY (`ad_type_id`) REFERENCES `ad_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_orders_has_ad_types_orders3` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `orders_items` WRITE;
+/*!40000 ALTER TABLE `orders_items` DISABLE KEYS */;
+
+INSERT INTO `orders_items` (`order_id`, `ad_type_id`, `quantity`)
+VALUES
+	(1,1,1),
+	(1,2,1),
+	(1,3,1),
+	(2,1,3),
+	(2,3,1),
+	(3,2,3),
+	(3,3,1),
+	(4,3,4);
+
+/*!40000 ALTER TABLE `orders_items` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump da tabela pricing_rules
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `pricing_rules`;
+
+CREATE TABLE `pricing_rules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `rule_type` enum('discount','deal') NOT NULL,
+  `rule` varchar(120) NOT NULL,
+  `ad_type_id` int(11) NOT NULL,
+  `customer_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_pricing_rules_customers1_idx` (`customer_id`),
+  KEY `fk_pricing_rules_ad_types1_idx` (`ad_type_id`),
+  CONSTRAINT `fk_pricing_rules_ad_types1` FOREIGN KEY (`ad_type_id`) REFERENCES `ad_types` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_pricing_rules_customers1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `pricing_rules` WRITE;
+/*!40000 ALTER TABLE `pricing_rules` DISABLE KEYS */;
+
+INSERT INTO `pricing_rules` (`id`, `rule_type`, `rule`, `ad_type_id`, `customer_id`, `created_at`, `updated_at`, `deleted_at`)
+VALUES
+	(1,'deal','3 FOR 2',1,1,'2016-09-22 03:58:34','2016-09-22 03:58:34',NULL),
+	(2,'discount','299.99',2,2,'2016-09-22 03:58:55','2016-09-22 03:58:55',NULL),
+	(3,'discount','379.99 WHEN_THERE 4',3,3,'2016-09-22 03:59:21','2016-09-22 03:59:21',NULL),
+	(4,'deal','5 FOR 4',1,4,'2016-09-22 03:59:40','2016-09-22 03:59:40',NULL),
+	(5,'discount','309.99',2,4,'2016-09-22 04:00:00','2016-09-22 04:00:00',NULL),
+	(6,'discount','389.99 WHEN_THERE 3',3,4,'2016-09-22 04:00:20','2016-09-22 04:00:20',NULL);
+
+/*!40000 ALTER TABLE `pricing_rules` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
